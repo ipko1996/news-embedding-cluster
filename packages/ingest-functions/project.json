@@ -1,0 +1,20 @@
+{
+  "name": "ingest-functions",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nxazure/func:build"
+    },
+    "start": {
+      "executor": "@nxazure/func:start",
+      "options": {
+        "port": 7071
+      }
+    },
+    "publish": {
+      "executor": "@nxazure/func:publish"
+    }
+  },
+  "tags": [""]
+}

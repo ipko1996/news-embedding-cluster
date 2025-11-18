@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "target": "es6",
+    "sourceMap": true,
+    "strict": true,
+    "types": ["node", "@azure/functions"]
+  },
+  "include": ["**/*.ts"]
+}
