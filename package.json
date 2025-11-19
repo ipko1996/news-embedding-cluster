@@ -14,12 +14,11 @@
     "prettier": "^2.6.2",
     "tslib": "^2.3.0",
     "typescript": "~5.9.2",
-    "azure-functions-core-tools": "^4.x",
     "@types/node": "18.x",
     "rimraf": "^5.0.0"
   },
   "dependencies": {
-    "@azure/functions": "^4.0.0",
+    "@azure/functions": "^4.9.0",
     "tsconfig-paths": "^4.2.0"
   }
 }

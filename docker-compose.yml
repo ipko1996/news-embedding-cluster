@@ -1,5 +1,18 @@
 name: news-embedding-cluster
 services:
+  azurite:
+    container_name: "azurite"
+    image: mcr.microsoft.com/azure-storage/azurite
+    pull_policy: always
+    ports:
+      - "10000:10000" # Blob storage (Required for Timer Trigger)
+      - "10001:10001" # Queue storage
+      - "10002:10002" # Table storage
+    networks:
+      sb-emulator:
+        aliases:
+          - "azurite"
+
   emulator:
     container_name: "servicebus-emulator"
     image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest
@@ -20,6 +33,7 @@ services:
       sb-emulator:
         aliases:
           - "sb-emulator"
+
   mssql:
     container_name: "mssql"
     image: "mcr.microsoft.com/mssql/server:2022-latest"

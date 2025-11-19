@@ -5,7 +5,7 @@
         "Name": "sbemulatorns",
         "Queues": [
           {
-            "Name": "feed-queue",
+            "Name": "sources.dispatch.queue",
             "Properties": {
               "DeadLetteringOnMessageExpiration": false,
               "DefaultMessageTimeToLive": "PT1H",
@@ -19,7 +19,21 @@
             }
           },
           {
-            "Name": "article-queue",
+            "Name": "feeds.parse.queue",
+            "Properties": {
+              "DeadLetteringOnMessageExpiration": false,
+              "DefaultMessageTimeToLive": "PT1H",
+              "DuplicateDetectionHistoryTimeWindow": "PT5M",
+              "ForwardDeadLetteredMessagesTo": "",
+              "ForwardTo": "",
+              "LockDuration": "PT5M",
+              "MaxDeliveryCount": 3,
+              "RequiresDuplicateDetection": false,
+              "RequiresSession": false
+            }
+          },
+          {
+            "Name": "articles.process.queue",
             "Properties": {
               "DeadLetteringOnMessageExpiration": false,
               "DefaultMessageTimeToLive": "PT1H",
@@ -33,7 +47,14 @@
             }
           }
         ],
-        "Topics": []
+        "Topics": [],
+        "SASKeys": [
+          {
+            "Name": "RootManageSharedAccessKey",
+            "Key": "Cl5@3194Base64KeyGeneratedForLocalDev=",
+            "Rights": ["Manage", "Send", "Listen"]
+          }
+        ]
       }
     ],
     "Logging": {
