@@ -5,9 +5,9 @@ services:
     image: mcr.microsoft.com/azure-storage/azurite
     pull_policy: always
     ports:
-      - "10000:10000" # Blob storage (Required for Timer Trigger)
-      - "10001:10001" # Queue storage
-      - "10002:10002" # Table storage
+      - "10000:10000" # Blob
+      - "10001:10001" # Queue
+      - "10002:10002" # Table
     networks:
       sb-emulator:
         aliases:
@@ -45,5 +45,30 @@ services:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
 
+  # Cosmos DB Emulator (https://github.com/Azure/azure-cosmos-db-emulator-docker)
+  # Learn more about the emulator and its limitations here:https://learn.microsoft.com/en-us/azure/cosmos-db/emulator-linux
+  cosmosdb:
+    container_name: "cosmosdb"
+    image: "mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-preview"
+    pull_policy: always
+    ports:
+      - "8081:8081" # Gateway Endpoint (HTTPS)
+      - "1234:1234" # Data Explorer UI (HTTP)
+    environment:
+      - PROTOCOL=http 
+      - PORT=8081
+      - ENABLE_EXPLORER=true
+      - EXPLORER_PORT=1234
+      - DATA_PATH=/data 
+    volumes:
+      - cosmos-data:/data
+    networks:
+      sb-emulator:
+        aliases:
+          - "cosmosdb"
+
 networks:
   sb-emulator:
+
+volumes:
+  cosmos-data:

@@ -13,6 +13,11 @@
   },
   "dependencies": {
     "@azure/functions": "^4.9.0",
-    "tsconfig-paths": "^4.2.0"
+    "rss-parser": "^3.13.0",
+    "tsconfig-paths": "^4.2.0",
+    "axios": "^1.13.2",
+    "jsdom": "^27.2.0",
+    "@mozilla/readability": "^0.6.0",
+    "@azure/cosmos": "^4.8.0"
   }
 }
