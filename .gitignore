@@ -13,6 +13,7 @@ node_modules
 # Environment files
 .env
 .env.*
+!.env.example
 .project
 .classpath
 .c9/
@@ -46,4 +47,3 @@ Thumbs.db
 .nx/workspace-data
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
-
