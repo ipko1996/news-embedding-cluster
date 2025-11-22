@@ -4,6 +4,7 @@ export interface ArticleQueueMessage {
   title: string;
   link: string;
   publishedAt: string;
+  categories: string[]; // cleaned category names
 }
 
 export interface BaseArticle {
@@ -16,6 +17,7 @@ export interface BaseArticle {
   publishedAt: string;
   scrapedAt: string;
   date: string; // YYYY-MM-DD
+  categories: string[]; // cleaned category names (may be empty)
 }
 
 export interface ProcessedArticle extends BaseArticle {

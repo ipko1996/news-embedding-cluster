@@ -66,6 +66,7 @@ export async function articleEmbedder(
       publishedAt: article.publishedAt,
       scrapedAt: article.scrapedAt,
       date: article.date,
+      categories: article.categories,
       embedding: embedding,
       embeddedAt: new Date().toISOString(),
       processingStatus: 'embedded',

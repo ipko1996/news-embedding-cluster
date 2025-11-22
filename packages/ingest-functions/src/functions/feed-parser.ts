@@ -2,7 +2,7 @@ import { app, InvocationContext, output } from '@azure/functions';
 import Parser from 'rss-parser';
 import { CustomFeed, CustomItem, NewsSource } from '../types';
 import { ArticleQueueMessage } from '../types';
-import { cleanText, shouldExcludeItem } from '../helpers';
+import { cleanText, extractCategory } from '../helpers';
 
 const parser = new Parser<CustomFeed, CustomItem>({
   timeout: 5000,
@@ -27,8 +27,11 @@ export async function feedParser(
 
   try {
     const feed = await parser.parseURL(source.url);
-
     context.log(`${logPrefix} ✅ Fetched. Found ${feed.items.length} items.`);
+
+    const excludedSet = new Set(
+      (source.excludeCategories || []).map((c) => c.toLowerCase().trim())
+    );
 
     const articlesToSend: ArticleQueueMessage[] = [];
 
@@ -40,16 +43,27 @@ export async function feedParser(
         continue;
       }
 
-      if (shouldExcludeItem(item, source.excludeCategories)) {
-        context.log(
-          `${logPrefix} 🚫 Filtered out by category: ${cleanText(item.title)}`
-        );
+      const cleanTitle = cleanText(item.title);
+
+      const rawCategories = [
+        ...extractCategory(item.category),
+        ...extractCategory(item.categories),
+      ];
+
+      const categories = Array.from(
+        new Set(
+          rawCategories.map((c) => cleanText(c)).filter((c) => c.length > 0)
+        )
+      );
+
+      const isExcluded = categories.some((cat) => excludedSet.has(cat));
+
+      if (isExcluded) {
+        context.log(`${logPrefix} 🚫 Filtered out by category: ${cleanTitle}`);
         continue;
       }
 
-      const cleanTitle = cleanText(item.title);
       const cleanLink = item.link.trim();
-
       const pubDate = item.isoDate || item.pubDate || new Date().toISOString();
 
       articlesToSend.push({
@@ -58,6 +72,7 @@ export async function feedParser(
         title: cleanTitle,
         link: cleanLink,
         publishedAt: pubDate,
+        categories,
       });
     }
 
@@ -65,15 +80,12 @@ export async function feedParser(
       `${logPrefix} 📤 Sending ${articlesToSend.length} valid articles to processing queue.`
     );
 
-    // For testing send only two from the array
-    // return articlesToSend.slice(0, 10); // <--- REMOVE OR COMMENT THIS OUT TO ENABLE SENDING
-
-    return articlesToSend;
+    // TODO: Remove slice before production
+    return articlesToSend.slice(0, 10);
   } catch (error) {
     context.error(
       `${logPrefix} ❌ Failed to parse RSS: ${(error as Error).message}`
     );
-    // Return empty array on failure so the message is acknowledged (and not retried infinitely)
     return [];
   }
 }

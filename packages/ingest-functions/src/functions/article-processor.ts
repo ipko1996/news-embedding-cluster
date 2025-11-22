@@ -70,7 +70,10 @@ export async function articleProcessor(
     const content = cleanText(article?.textContent || '');
     if (!article || content.length < CONTENT_THRESHOLD) {
       context.warn(
-        `${logPrefix} ⚠️ Content empty or too short (<${CONTENT_THRESHOLD} chars). Skipping.`
+        `${logPrefix} ⚠️ Article with the title "${msg.title}" has insufficient content.`
+      );
+      context.warn(
+        `${logPrefix} Content empty or too short (<${CONTENT_THRESHOLD} chars). Skipping.`
       );
       return null;
     }
@@ -87,6 +90,7 @@ export async function articleProcessor(
       publishedAt: msg.publishedAt,
       scrapedAt: now.toISOString(),
       date: now.toISOString().split('T')[0],
+      categories: msg.categories,
       processingStatus: 'pending_embedding',
     };
 
