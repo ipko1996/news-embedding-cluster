@@ -27,7 +27,7 @@ export async function sourceDispatcher(
 }
 
 app.timer('source-dispatcher', {
-  schedule: '0 */5 * * * *',
+  schedule: '0 */15 * * * *',
   runOnStartup: true,
   return: output.serviceBusQueue({
     queueName: 'sources.dispatch.queue',

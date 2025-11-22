@@ -1,19 +1,23 @@
-import { app, InvocationContext } from '@azure/functions';
+import { app, InvocationContext, output } from '@azure/functions';
 import axios from 'axios';
 import { JSDOM } from 'jsdom';
 import { Readability } from '@mozilla/readability';
 
 import { ArticleQueueMessage, ProcessedArticle } from '../types';
-import { cleanText, isArticleInDb } from '../helpers';
-import { articlesContainer } from '../clients/cosmos';
-import { generateId } from '../helpers';
+import { cleanText, isArticleInDb, generateId, delay } from '../helpers';
 
-const CONTENT_THRESHOLD = 100;
+const CONTENT_THRESHOLD = 300;
+const DELAY_BETWEEN_ARTICLES_MS = 2000; // 2 seconds between articles from same source
+
+const enrichmentQueueOutput = output.serviceBusQueue({
+  queueName: 'article.enrichment.queue',
+  connection: 'SERVICE_BUS_CONNECTION',
+});
 
 export async function articleProcessor(
   message: unknown,
   context: InvocationContext
-): Promise<void> {
+): Promise<ProcessedArticle | null> {
   const msg = message as ArticleQueueMessage;
   const articleId = generateId(msg.link);
   const logPrefix = `[${msg.sourceId}]`;
@@ -21,12 +25,16 @@ export async function articleProcessor(
   context.log(`${logPrefix} ⚡ Processing: ${msg.title}`);
 
   try {
+    // Check if already exists
     if (await isArticleInDb(articleId)) {
       context.log(
-        `${logPrefix} ⏭️ Article already exists (ID: ${articleId}). Skipping.`
+        `${logPrefix} ⭐️ Article already exists (ID: ${articleId}). Skipping.`
       );
-      return;
+      return null;
     }
+
+    // Add delay to be respectful to the website
+    await delay(DELAY_BETWEEN_ARTICLES_MS);
 
     const response = await axios.get(msg.link, {
       timeout: 10000,
@@ -34,7 +42,26 @@ export async function articleProcessor(
         'User-Agent': 'NewsEmbeddinCluster/1.0 (Bot)',
         Accept: 'text/html,application/xhtml+xml',
       },
+      validateStatus: (status) => status < 500, // Don't throw on 4xx errors
     });
+
+    // Handle rate limiting
+    if (response.status === 429) {
+      const retryAfter = response.headers['retry-after'];
+      context.warn(
+        `${logPrefix} ⚠️ Rate limited (429). Retry after: ${
+          retryAfter || 'unknown'
+        }`
+      );
+      throw new Error('Rate limited - will retry');
+    }
+
+    if (response.status >= 400) {
+      context.warn(
+        `${logPrefix} ⚠️ HTTP ${response.status} error. Skipping article.`
+      );
+      return null;
+    }
 
     const dom = new JSDOM(response.data, { url: msg.link });
     const reader = new Readability(dom.window.document);
@@ -45,11 +72,11 @@ export async function articleProcessor(
       context.warn(
         `${logPrefix} ⚠️ Content empty or too short (<${CONTENT_THRESHOLD} chars). Skipping.`
       );
-      return;
+      return null;
     }
 
     const now = new Date();
-    const savedArticle: ProcessedArticle = {
+    const processedArticle: ProcessedArticle = {
       id: articleId,
       url: msg.link,
       title: cleanText(article.title || msg.title),
@@ -63,18 +90,31 @@ export async function articleProcessor(
       processingStatus: 'pending_embedding',
     };
 
-    await articlesContainer.items.upsert(savedArticle);
     context.log(
-      `${logPrefix} 💾 Saved article to Cosmos DB (ID: ${articleId}).`
+      `${logPrefix} 📤 Sending article to enrichment queue (ID: ${articleId}).`
     );
+
+    return processedArticle;
   } catch (error) {
-    context.error(`${logPrefix} ❌ Failed: ${(error as Error).message}`);
-    throw error;
+    const err = error as Error;
+    context.error(`${logPrefix} ❌ Failed: ${err.message}`);
+
+    // Retry on rate limiting or network errors
+    if (
+      err.message.includes('Rate limited') ||
+      err.message.includes('ETIMEDOUT')
+    ) {
+      throw error; // Let Service Bus retry
+    }
+
+    // Don't retry on other errors
+    return null;
   }
 }
 
 app.serviceBusQueue('article-processor', {
   connection: 'SERVICE_BUS_CONNECTION',
   queueName: 'articles.process.queue',
+  return: enrichmentQueueOutput,
   handler: articleProcessor,
 });

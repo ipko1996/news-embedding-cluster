@@ -19,7 +19,7 @@
             }
           },
           {
-            "Name": "feeds.parse.queue",
+            "Name": "articles.process.queue",
             "Properties": {
               "DeadLetteringOnMessageExpiration": false,
               "DefaultMessageTimeToLive": "PT1H",
@@ -33,7 +33,7 @@
             }
           },
           {
-            "Name": "articles.process.queue",
+            "Name": "article.enrichment.queue",
             "Properties": {
               "DeadLetteringOnMessageExpiration": false,
               "DefaultMessageTimeToLive": "PT1H",

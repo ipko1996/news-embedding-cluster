@@ -23,6 +23,9 @@ importers:
       jsdom:
         specifier: ^27.2.0
         version: 27.2.0
+      openai:
+        specifier: ^6.9.1
+        version: 6.9.1(ws@8.18.3)
       tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.0
@@ -72,6 +75,9 @@ importers:
 
   packages/ingest-functions:
     dependencies:
+      '@azure/cosmos':
+        specifier: ^4.8.0
+        version: 4.8.0
       '@azure/functions':
         specifier: ^4.9.0
         version: 4.9.0
@@ -1700,6 +1706,18 @@ packages:
   open@8.4.2:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
+
+  openai@6.9.1:
+    resolution: {integrity: sha512-vQ5Rlt0ZgB3/BNmTa7bIijYFhz3YBceAA3Z4JuoMSBftBF9YqFHIEhZakSs+O/Ad7EaoEimZvHxD5ylRjN11Lg==}
+    hasBin: true
+    peerDependencies:
+      ws: ^8.18.0
+      zod: ^3.25 || ^4.0
+    peerDependenciesMeta:
+      ws:
+        optional: true
+      zod:
+        optional: true
 
   ora@5.3.0:
     resolution: {integrity: sha512-zAKMgGXUim0Jyd6CXK9lraBnD3H5yPGBPPOkC23a2BG6hsm4Zu6OQSjQuEtV0BHDf4aKHcUFvJiGRrFuW3MG8g==}
@@ -4054,6 +4072,10 @@ snapshots:
       define-lazy-prop: 2.0.0
       is-docker: 2.2.1
       is-wsl: 2.2.0
+
+  openai@6.9.1(ws@8.18.3):
+    optionalDependencies:
+      ws: 8.18.3
 
   ora@5.3.0:
     dependencies:
