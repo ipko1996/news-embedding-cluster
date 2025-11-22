@@ -27,3 +27,14 @@ export interface NewsSource {
   isActive?: boolean;
   excludeCategories?: string[];
 }
+
+// These allow you to extract non-standard fields later (like images in content:encoded)
+// Standard fields (title, link, pubDate, etc.) are included automatically by the library.
+export type CustomFeed = {
+  // Example: managingEditor?: string;
+};
+
+export type CustomItem = {
+  // Example: 'content:encoded'?: string;
+  category?: string | string[];
+};

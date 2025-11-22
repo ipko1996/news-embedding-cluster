@@ -1,4 +1,3 @@
-// Helper to clean titles (removes HTML tags like <b> or <img>)
 export function cleanText(text: string | undefined): string {
   if (!text) return '';
   // Remove HTML tags

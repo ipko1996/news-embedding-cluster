@@ -1,19 +1,8 @@
 import { app, InvocationContext, output } from '@azure/functions';
 import Parser from 'rss-parser';
-import { NewsSource } from '../types';
+import { CustomFeed, CustomItem, NewsSource } from '../types';
 import { ArticleQueueMessage } from '../types';
-import { cleanText } from '../helpers/clean-text';
-
-// These allow you to extract non-standard fields later (like images in content:encoded)
-// Standard fields (title, link, pubDate, etc.) are included automatically by the library.
-type CustomFeed = {
-  // Example: managingEditor?: string;
-};
-
-type CustomItem = {
-  // Example: 'content:encoded'?: string;
-  category?: string | string[];
-};
+import { cleanText, shouldExcludeItem } from '../helpers';
 
 const parser = new Parser<CustomFeed, CustomItem>({
   timeout: 5000,
@@ -26,30 +15,6 @@ const articleQueueOutput = output.serviceBusQueue({
   queueName: 'articles.process.queue',
   connection: 'SERVICE_BUS_CONNECTION',
 });
-
-// Helper to check if item's category should be excluded
-function shouldExcludeItem(
-  item: CustomItem,
-  excludeCategories?: string[]
-): boolean {
-  if (!excludeCategories || excludeCategories.length === 0) {
-    return false;
-  }
-  if (!item.category) {
-    return false;
-  }
-
-  const itemCategories = Array.isArray(item.category)
-    ? item.category
-    : [item.category];
-
-  const [cleanedCategories, normalizedExcluded] = [
-    itemCategories.map((cat) => cleanText(cat).toLowerCase()),
-    excludeCategories.map((cat) => cat.toLowerCase().trim()),
-  ];
-
-  return cleanedCategories.some((cat) => normalizedExcluded.includes(cat));
-}
 
 export async function feedParser(
   message: unknown,

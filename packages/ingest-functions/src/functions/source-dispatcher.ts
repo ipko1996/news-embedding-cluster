@@ -1,6 +1,6 @@
 import { app, InvocationContext, Timer, output } from '@azure/functions';
-import { HUNGARIAN_SOURCES } from '../rss.js'; // Adjust path as needed
-import { NewsSource } from '../types/index.js';
+import { HUNGARIAN_SOURCES } from '../rss';
+import { NewsSource } from '../types';
 
 export async function sourceDispatcher(
   _myTimer: Timer,
@@ -9,7 +9,6 @@ export async function sourceDispatcher(
   const runId = new Date().toISOString();
   context.log(`[${runId}] 🚀 Source Dispatcher started.`);
 
-  // Filter active sources
   const activeSources = HUNGARIAN_SOURCES.filter(
     (source) => source.isActive !== false
   );
@@ -19,7 +18,6 @@ export async function sourceDispatcher(
     return [];
   }
 
-  // Log the IDs for easier debugging in App Insights
   const sourceIds = activeSources.map((s) => s.id).join(', ');
   context.log(
     `[${runId}] 📤 Dispatching ${activeSources.length} sources: [${sourceIds}]`
