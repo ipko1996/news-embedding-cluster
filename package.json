@@ -27,6 +27,7 @@
     "axios": "^1.13.2",
     "jsdom": "^27.2.0",
     "openai": "^6.9.1",
+    "tiktoken": "^1.0.22",
     "tsconfig-paths": "^4.2.0"
   }
 }

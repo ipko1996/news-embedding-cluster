@@ -19,6 +19,7 @@
     "jsdom": "^27.2.0",
     "@mozilla/readability": "^0.6.0",
     "@azure/cosmos": "^4.8.0",
-    "openai": "^6.9.1"
+    "openai": "^6.9.1",
+    "tiktoken": "^1.0.22"
   }
 }

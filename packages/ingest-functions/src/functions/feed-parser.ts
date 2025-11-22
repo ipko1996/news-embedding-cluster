@@ -66,7 +66,7 @@ export async function feedParser(
     );
 
     // For testing send only two from the array
-    return articlesToSend.slice(0, 10); // <--- REMOVE OR COMMENT THIS OUT TO ENABLE SENDING
+    // return articlesToSend.slice(0, 10); // <--- REMOVE OR COMMENT THIS OUT TO ENABLE SENDING
 
     return articlesToSend;
   } catch (error) {

@@ -27,6 +27,11 @@ export interface EmbeddedArticle extends BaseArticle {
   embedding: number[];
   embeddedAt: string;
   processingStatus: 'embedded';
+  metadata?: {
+    originalTokenCount: number;
+    embeddedTokenCount: number;
+    wasTruncated: boolean;
+  };
 }
 
 export interface NewsSource {

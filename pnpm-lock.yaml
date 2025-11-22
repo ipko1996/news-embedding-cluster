@@ -26,6 +26,9 @@ importers:
       openai:
         specifier: ^6.9.1
         version: 6.9.1(ws@8.18.3)
+      tiktoken:
+        specifier: ^1.0.22
+        version: 1.0.22
       tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.0
@@ -90,6 +93,9 @@ importers:
       jsdom:
         specifier: ^27.2.0
         version: 27.2.0
+      openai:
+        specifier: ^6.9.1
+        version: 6.9.1(ws@8.18.3)
       rss-parser:
         specifier: ^3.13.0
         version: 3.13.0
@@ -1949,6 +1955,9 @@ packages:
   tar-stream@2.2.0:
     resolution: {integrity: sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ==}
     engines: {node: '>=6'}
+
+  tiktoken@1.0.22:
+    resolution: {integrity: sha512-PKvy1rVF1RibfF3JlXBSP0Jrcw2uq3yXdgcEXtKTYn3QJ/cBRBHDnrJ5jHky+MENZ6DIPwNUGWpkVx+7joCpNA==}
 
   tinyglobby@0.2.15:
     resolution: {integrity: sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==}
@@ -4290,6 +4299,8 @@ snapshots:
       fs-constants: 1.0.0
       inherits: 2.0.4
       readable-stream: 3.6.2
+
+  tiktoken@1.0.22: {}
 
   tinyglobby@0.2.15:
     dependencies:
