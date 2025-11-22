@@ -22,6 +22,23 @@ export async function articleEmbedder(
   const article = message as ProcessedArticle;
   const logPrefix = `[${article.sourceId}]`;
 
+  // Skip embedding if flagged as insufficient.
+  if (
+    article.processingStatus === 'skipped_insufficient_content' ||
+    article.insufficientContent ||
+    article.content.trim().length === 0
+  ) {
+    context.log(
+      `${logPrefix} 🚫 Skipping embedding for insufficient content (ID: ${article.id}). Saving placeholder.`
+    );
+    // Upsert the placeholder (no embedding) so it's stored and won't be re-fetched.
+    await articlesContainer.items.upsert(article);
+    context.log(
+      `${logPrefix} 💾 Saved placeholder article to Cosmos DB (ID: ${article.id})`
+    );
+    return; // do not proceed to embedding
+  }
+
   context.log(`${logPrefix} 🔮 Embedding: ${article.title}`);
 
   try {

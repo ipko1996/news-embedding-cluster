@@ -4,10 +4,9 @@ import { JSDOM } from 'jsdom';
 import { Readability } from '@mozilla/readability';
 
 import { ArticleQueueMessage, ProcessedArticle } from '../types';
-import { cleanText, isArticleInDb, generateId, delay } from '../helpers';
+import { cleanText, isArticleInDb, generateId } from '../helpers';
 
 const CONTENT_THRESHOLD = 300;
-const DELAY_BETWEEN_ARTICLES_MS = 2000; // 2 seconds between articles from same source
 
 const enrichmentQueueOutput = output.serviceBusQueue({
   queueName: 'article.enrichment.queue',
@@ -32,9 +31,6 @@ export async function articleProcessor(
       );
       return null;
     }
-
-    // Add delay to be respectful to the website
-    await delay(DELAY_BETWEEN_ARTICLES_MS);
 
     const response = await axios.get(msg.link, {
       timeout: 10000,
@@ -73,9 +69,31 @@ export async function articleProcessor(
         `${logPrefix} ⚠️ Article with the title "${msg.title}" has insufficient content.`
       );
       context.warn(
-        `${logPrefix} Content empty or too short (<${CONTENT_THRESHOLD} chars). Skipping.`
+        `${logPrefix} Content empty or too short (<${CONTENT_THRESHOLD} chars). Creating placeholder article to avoid re-query.`
       );
-      return null;
+
+      const now = new Date();
+      const placeholderArticle: ProcessedArticle = {
+        id: articleId,
+        url: msg.link,
+        title: msg.title,
+        content: '', // intentionally empty to signal insufficient content
+        excerpt: cleanText(article?.excerpt || '', false),
+        sourceId: msg.sourceId,
+        sourceName: msg.sourceName,
+        publishedAt: msg.publishedAt,
+        scrapedAt: now.toISOString(),
+        date: now.toISOString().split('T')[0],
+        categories: msg.categories,
+        processingStatus: 'skipped_insufficient_content',
+        insufficientContent: true,
+        skipReason: 'insufficient_content',
+      };
+
+      context.log(
+        `${logPrefix} 💤 Placeholder queued (ID: ${articleId}) - will be saved without embedding.`
+      );
+      return placeholderArticle; // send to enrichment queue for saving logic, embedding will skip
     }
 
     const now = new Date();
@@ -92,6 +110,7 @@ export async function articleProcessor(
       date: now.toISOString().split('T')[0],
       categories: msg.categories,
       processingStatus: 'pending_embedding',
+      insufficientContent: false,
     };
 
     context.log(

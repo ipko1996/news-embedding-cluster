@@ -22,7 +22,11 @@ export interface BaseArticle {
 
 export interface ProcessedArticle extends BaseArticle {
   content: string;
-  processingStatus: 'pending_embedding';
+  processingStatus: 'pending_embedding' | 'skipped_insufficient_content';
+  // Indicates article did not have enough extractable text but is stored to avoid re-fetching.
+  insufficientContent: boolean;
+  // Reason for skipping further processing (extendable for future cases)
+  skipReason?: 'insufficient_content';
 }
 
 export interface EmbeddedArticle extends BaseArticle {
