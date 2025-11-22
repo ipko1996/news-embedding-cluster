@@ -82,9 +82,9 @@ export async function articleProcessor(
     const processedArticle: ProcessedArticle = {
       id: articleId,
       url: msg.link,
-      title: cleanText(article.title || msg.title),
+      title: msg.title,
       content: content,
-      excerpt: cleanText(article.excerpt || ''),
+      excerpt: cleanText(article.excerpt || '', false),
       sourceId: msg.sourceId,
       sourceName: msg.sourceName,
       publishedAt: msg.publishedAt,

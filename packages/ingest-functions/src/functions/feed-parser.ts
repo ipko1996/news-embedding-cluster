@@ -43,7 +43,7 @@ export async function feedParser(
         continue;
       }
 
-      const cleanTitle = cleanText(item.title);
+      const cleanTitle = cleanText(item.title, false);
 
       const rawCategories = [
         ...extractCategory(item.category),
