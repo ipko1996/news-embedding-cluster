@@ -1,0 +1,30 @@
+{
+  "name": "topic-analyzer",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "packages/topic-analyzer",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "packages/topic-analyzer",
+        "command": "func start"
+      }
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "packages/topic-analyzer",
+        "command": "pip install -r requirements.txt"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "packages/topic-analyzer",
+        "command": "python -m compileall ."
+      }
+    }
+  },
+  "tags": ["scope:analytics", "type:app", "lang:python"]
+}

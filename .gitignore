@@ -1,49 +1,70 @@
-# See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+## Base ignore file for Node + Python Azure Functions monorepo
 
-# compiled output
-dist
-tmp
-out-tsc
+### Build & output
+dist/
+tmp/
+out-tsc/
 
-# dependencies
-node_modules
+### Dependencies
+node_modules/
+.python_packages/
 
-# IDEs and editors
-/.idea
-# Environment files
+### Environment & secrets
 .env
 .env.*
 !.env.example
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+.secrets
+/secrets
 local.settings.json
 
-# IDE - VSCode
-.vscode/*
+### Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+### Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+### Tool & test caches
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.nx/cache
+.nx/workspace-data
+htmlcov/
+.coverage
+coverage.xml
+
+### Logs & misc runtime artifacts
+npm-debug.log*
+yarn-error.log
+libpeerconnection.log
+testem.log
+
+### Editors / IDEs
+/.idea
+*.sublime-workspace
+.vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.cursor/rules/nx-rules.mdc
 
-# misc
-/.sass-cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-npm-debug.log
-yarn-error.log
-testem.log
-/typings
-
-# System Files
+### System files
 .DS_Store
 Thumbs.db
 
-.nx/cache
-.nx/workspace-data
-.cursor/rules/nx-rules.mdc
+### Project meta (internal docs)
 .github/instructions/nx.instructions.md
+
+### Azurite (Azure Storage Emulator) artifacts
+__blobstorage__
+__queuestorage__
+__azurite_db*__.json
+

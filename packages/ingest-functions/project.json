@@ -9,7 +9,7 @@
     "start": {
       "executor": "@nxazure/func:start",
       "options": {
-        "port": 7071
+        "port": 7072
       }
     },
     "publish": {

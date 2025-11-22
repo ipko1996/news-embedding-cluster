@@ -120,7 +120,7 @@ export async function articleProcessor(
     return processedArticle;
   } catch (error) {
     const err = error as Error;
-    context.error(`${logPrefix} ❌ Failed: ${err.message}`);
+    context.error(`${logPrefix} ❌ Failed:`, error);
 
     // Retry on rate limiting or network errors
     if (

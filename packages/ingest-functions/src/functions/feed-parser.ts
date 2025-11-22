@@ -81,7 +81,7 @@ export async function feedParser(
     );
 
     // TODO: Remove slice before production
-    return articlesToSend.slice(0, 10);
+    return articlesToSend; // .slice(0, 10);
   } catch (error) {
     context.error(
       `${logPrefix} ❌ Failed to parse RSS: ${(error as Error).message}`
