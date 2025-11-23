@@ -44,7 +44,7 @@ def perform_clustering(df: pd.DataFrame) -> pd.DataFrame:
 
     # DBSCAN
     db = DBSCAN(
-        eps=0.7,
+        eps=0.6,
         min_samples=3,
         metric="euclidean"
     )

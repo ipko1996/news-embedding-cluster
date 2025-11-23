@@ -32,4 +32,9 @@ export const HUNGARIAN_SOURCES: NewsSource[] = [
     name: 'Portfolio',
     url: 'https://www.portfolio.hu/rss/all.xml',
   },
+  {
+    id: 'origo-hu',
+    name: 'Origo',
+    url: 'https://www.origo.hu/publicapi/hu/rss/origo/articles',
+  },
 ];

@@ -4,9 +4,10 @@ import { JSDOM } from 'jsdom';
 import { Readability } from '@mozilla/readability';
 
 import { ArticleQueueMessage, ProcessedArticle } from '../types';
-import { cleanText, isArticleInDb, generateId } from '../helpers';
+import { cleanText, isArticleInDb, generateId, delay } from '../helpers';
 
 const CONTENT_THRESHOLD = 300;
+const REQUEST_DELAY = 2000;
 
 const enrichmentQueueOutput = output.serviceBusQueue({
   queueName: 'article.enrichment.queue',
@@ -31,6 +32,8 @@ export async function articleProcessor(
       );
       return null;
     }
+
+    await delay(REQUEST_DELAY);
 
     const response = await axios.get(msg.link, {
       timeout: 10000,

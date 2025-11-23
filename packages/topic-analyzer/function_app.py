@@ -8,7 +8,7 @@ from src.labeling import generate_topic_labels
 app = func.FunctionApp()
 
 @app.schedule(
-    schedule="1 0,15,30,45 * * * *",
+    schedule="1,16,31,46 * * * *",
     arg_name="myTimer",
     run_on_startup=True,
     use_monitor=False
