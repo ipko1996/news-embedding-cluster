@@ -46,16 +46,6 @@ yarn-error.log
 libpeerconnection.log
 testem.log
 
-### Editors / IDEs
-/.idea
-*.sublime-workspace
-.vscode/
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.cursor/rules/nx-rules.mdc
-
 ### System files
 .DS_Store
 Thumbs.db

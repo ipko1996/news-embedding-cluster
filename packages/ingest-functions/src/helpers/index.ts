@@ -4,3 +4,4 @@ export * from './is-article-in-db';
 export * from './tokenizer';
 export * from './extract-category';
 export * from './delay';
+export * from './save-to-blob';

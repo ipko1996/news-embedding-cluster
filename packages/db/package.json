@@ -1,0 +1,63 @@
+{
+  "name": "@news-embedding-cluster/db",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "@news-embedding-cluster/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "@nx/esbuild:esbuild",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "options": {
+          "outputPath": "packages/db/dist",
+          "main": "packages/db/src/index.ts",
+          "tsConfig": "packages/db/tsconfig.lib.json",
+          "format": [
+            "esm"
+          ],
+          "declarationRootDir": "packages/db/src"
+        }
+      },
+      "database:push": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "drizzle-kit push",
+          "cwd": "packages/db"
+        }
+      },
+      "database:generate": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "pnpm drizzle-kit generate",
+          "cwd": "packages/db"
+        }
+      },
+      "database:migrate": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "pnpm drizzle-kit migrate",
+          "cwd": "packages/db"
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.44.7",
+    "drizzle-kit": "^0.31.7"
+  }
+}

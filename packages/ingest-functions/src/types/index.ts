@@ -1,3 +1,5 @@
+import { ProcessingStatus } from '@news-embedding-cluster/db';
+
 export interface ArticleQueueMessage {
   sourceId: string;
   sourceName: string;
@@ -17,15 +19,13 @@ export interface BaseArticle {
   publishedAt: string;
   scrapedAt: string;
   date: string; // YYYY-MM-DD
+  content: string;
   categories: string[]; // cleaned category names (may be empty)
 }
 
 export interface ProcessedArticle extends BaseArticle {
-  content: string;
-  processingStatus: 'pending_embedding' | 'skipped_insufficient_content';
-  // Indicates article did not have enough extractable text but is stored to avoid re-fetching.
+  processingStatus: ProcessingStatus;
   insufficientContent: boolean;
-  // Reason for skipping further processing (extendable for future cases)
   skipReason?: 'insufficient_content';
 }
 
@@ -50,6 +50,7 @@ export interface NewsSource {
 
 // These allow you to extract non-standard fields later (like images in content:encoded)
 // Standard fields (title, link, pubDate, etc.) are included automatically by the library.
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type CustomFeed = {
   // Example: managingEditor?: string;
 };

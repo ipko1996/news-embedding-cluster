@@ -37,4 +37,19 @@ export const HUNGARIAN_SOURCES: NewsSource[] = [
     name: 'Origo',
     url: 'https://www.origo.hu/publicapi/hu/rss/origo/articles',
   },
+  {
+    id: 'magyarnemzet-hu',
+    name: 'Magyarnemzet',
+    url: 'https://magyarnemzet.hu/publicapi/hu/rss/magyar_nemzet/articles',
+  },
+  {
+    id: 'tenyek-hu',
+    name: 'Tények',
+    url: 'https://tenyek.hu/publicapi/hu/rss',
+  },
+  {
+    id: 'mandiner-hu',
+    name: 'Mandiner',
+    url: 'https://mandiner.hu/publicapi/hu/rss/mandiner/articles',
+  },
 ];

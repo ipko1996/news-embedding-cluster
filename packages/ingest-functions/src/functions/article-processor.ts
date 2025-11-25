@@ -88,7 +88,7 @@ export async function articleProcessor(
         scrapedAt: now.toISOString(),
         date: now.toISOString().split('T')[0],
         categories: msg.categories,
-        processingStatus: 'skipped_insufficient_content',
+        processingStatus: 'skipped',
         insufficientContent: true,
         skipReason: 'insufficient_content',
       };
@@ -112,7 +112,7 @@ export async function articleProcessor(
       scrapedAt: now.toISOString(),
       date: now.toISOString().split('T')[0],
       categories: msg.categories,
-      processingStatus: 'pending_embedding',
+      processingStatus: 'pending',
       insufficientContent: false,
     };
 
